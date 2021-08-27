@@ -19,9 +19,16 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'surname',
         'email',
+        'role',
+        'active',
+        'department_id',
+        'code',
+        'img',
         'password',
     ];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -41,4 +48,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function Department()
+    {
+        return $this->belongsTo('App\Models\Department');
+    }
 }
