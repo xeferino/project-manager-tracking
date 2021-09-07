@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Project extends Model
+class Binnacle extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'name',
-        'description',
-        'process_id',
-        'status'
+        'observation',
+        'project_id',
+        'user_id',
+        'annexes'
     ];
 }

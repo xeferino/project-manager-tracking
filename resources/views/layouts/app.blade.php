@@ -215,7 +215,7 @@ var nav = $('.fixed-button');
         //== Demos
         var initDemos = function() {
 
-            $('#alert_logout').click(function(e) {
+            $('.alert_logout').click(function(e) {
                 swal({
                     title: '{{ Auth::user()->name." ".Auth::user()->last_name }}',
                     text: "Desea salir del sistema!",

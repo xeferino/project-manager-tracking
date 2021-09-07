@@ -57,7 +57,7 @@ class DepartmentController extends Controller
                     ->rawColumns(['action','active'])
                     ->make(true);
         }
-        return view('panel.departments.index', ['title' => 'Departamentos', 'departments' => Department::all()]);
+        return view('panel.departments.index', ['title' => 'Departamentos']);
     }
 
     /**

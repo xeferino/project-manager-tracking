@@ -18,4 +18,9 @@ class Department extends Model
         'name',
         'active',
     ];
+
+    public function Users()
+    {
+        return $this->hasMany('App\Models\User');
+    }
 }

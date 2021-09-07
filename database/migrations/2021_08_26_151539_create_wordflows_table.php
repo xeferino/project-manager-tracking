@@ -15,6 +15,11 @@ class CreateWordflowsTable extends Migration
     {
         Schema::create('wordflows', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->unique();
+            $table->string('description');
+            $table->foreignId('process_id');
+            $table->foreign('process_id')->references('id')->on('processes')->onDelete('cascade');
+            $table->json('steps');
             $table->timestamps();
         });
     }
@@ -27,5 +32,9 @@ class CreateWordflowsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('wordflows');
+        Schema::table('wordflows', function (Blueprint $table) {
+            $table->dropForeign(['process_id']);
+            $table->dropColumn('process_id');
+        });
     }
 }

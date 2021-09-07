@@ -16,6 +16,8 @@ class CreateProjectsTable extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('description')->nullable($value=true);
+            $table->enum('status',['completed', 'pending', 'created', 'returned', 'dispatched']);
             $table->timestamps();
         });
     }

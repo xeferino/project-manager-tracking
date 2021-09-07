@@ -80,8 +80,8 @@
                                 <i class="ti-user"></i> Detalles de perfil
                             </a>
                         </li>
-                        <li>
-                            <a href="#" id="alert_logout">
+                        <li class="alert_logout">
+                            <a href="#">
                                 <i class="ti-layout-sidebar-left"></i> Salir
                             </a>
                         </li>

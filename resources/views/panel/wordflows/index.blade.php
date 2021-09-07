@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => $title ?? 'Proyectos'])
+@extends('layouts.app', ['title' => $title ?? 'Flujos'])
 
 @section('page-header')
     <div class="page-wrapper">
@@ -7,10 +7,10 @@
             <div class="row align-items-end">
                 <div class="col-lg-8">
                     <div class="page-header-title">
-                        <i class="icofont icofont-table bg-c-blue"></i>
+                        <i class="ti-direction-alt bg-c-blue"></i>
                         <div class="d-inline">
-                            <h4>Listado de proyectos</h4>
-                            <span>informacion de los proyectos que se encuentran en el sistema.</span>
+                            <h4>Listado de flujos</h4>
+                            <span>informacion de los flujos que se encuentran en el sistema.</span>
                         </div>
                     </div>
                 </div>
@@ -22,9 +22,9 @@
                                 <i class="icofont icofont-home"></i>
                             </a>
                         </li>
-                        <li class="breadcrumb-item"><a href="{{ route('projects.index') }}">Proyectos</a>
+                        <li class="breadcrumb-item"><a href="{{ route('wordflows.index') }}">Flujos</a>
                         </li>
-                        <li class="breadcrumb-item"><a href="{{ route('projects.index') }}">Listado</a>
+                        <li class="breadcrumb-item"><a href="{{ route('wordflows.index') }}">Listado</a>
                         </li>
                     </ul>
                 </div>
@@ -37,22 +37,21 @@
     <!-- Hover table card start -->
     <div class="card">
         <div class="card-header">
-            <h5>Mis Proyectos</h5>
+            <h5>Mis Flujos</h5>
             <div class="card-header-right">
-                <a href="{{ route('projects.create') }}" class="btn btn-primary">Nuevo Proyecto</a>
+                <a href="{{ route('wordflows.create') }}" class="btn btn-primary">Nuevo Flujo</a>
             </div>
         </div>
         <div class="card-block table-border-style">
             <div class="table-responsive">
-                <table class="table table-hover table-user">
+                <table class="table table-hover table-wordflow">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Nombres</th>
-                            <th>Usuario</th>
-                            <th>Departamento</th>
-                            <th>Fecha Modificacion</th>
-                            <th>Estatus</th>
+                            <th>Nombre</th>
+                            <th>Descripcion</th>
+                            <th>Proceso</th>
+                            <th>Pasos</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -69,14 +68,14 @@
 <script>
     $(function () {
         /*DataTables*/
-        var table = $('.table-user').DataTable({
+        var table = $('.table-wordflow').DataTable({
             processing: true,
             serverSide: true,
             "language": {
                 "decimal":        "",
-                "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ proyectos",
-                "infoEmpty":      "Mostrando 0 para 0 de 0 proyectos",
-                "infoFiltered":   "(Filtrado para un total de _MAX_ proyectos)",
+                "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ Flujos",
+                "infoEmpty":      "Mostrando 0 para 0 de 0 Flujos",
+                "infoFiltered":   "(Filtrado para un total de _MAX_ Flujos)",
                 "infoPostFix":    "",
                 "thousands":      ",",
                 "lengthMenu":     "Mostrar _MENU_ Registros",
@@ -95,14 +94,13 @@
                     "sortDescending": ": activate to sort column descending"
                 }
             },
-            ajax: "{{ route('projects.index') }}",
+            ajax: "{{ route('wordflows.index') }}",
             columns: [
                 {data: 'id', name: 'id'},
+                {data: 'name', name: 'name'},
                 {data: 'description', name: 'description'},
-                {data: 'user', name: 'user'},
-                {data: 'department', name: 'department'},
-                {data: 'updated_at', name: 'updated_at'},
-                {data: 'status', name: 'status'},
+                {data: 'process', name: 'process'},
+                {data: 'steps', name: 'steps'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });

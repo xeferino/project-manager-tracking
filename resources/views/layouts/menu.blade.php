@@ -12,10 +12,10 @@
 
             <div class="main-menu-content">
                 <ul>
-                    <li class="more-details">
+                    <li class="more-details alert_logout">
                         <a href="{{ route('users.show', ['user' => Auth::user()->id]) }}"><i class="ti-user"></i>Detalles de perfil</a>
                         {{-- <a href="#!"><i class="ti-settings"></i>Configuracion</a> --}}
-                        <a href="#" id="alert_logout"><i class="ti-layout-sidebar-left"></i>Salir</a>
+                        <a href="#"><i class="ti-layout-sidebar-left"></i>Salir</a>
                     </li>
                 </ul>
             </div>
@@ -54,6 +54,16 @@
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>
+
+            <li class="{{(\Request::segment(1)=='wordflows')?'active':''}}">
+                <a href="{{ route('wordflows.index') }}">
+                    <span class="pcoded-micon"><i class="ti-direction-alt"></i><b>FJ</b></span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Flujos</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
+
+
 
             <li class="{{(\Request::segment(1)=='users')?'active':''}}">
                 <a href="{{ route('users.index') }}">

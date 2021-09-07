@@ -24,4 +24,6 @@ Route::resource('users', 'UserController')->middleware('auth');
 Route::resource('departments', 'DepartmentController')->middleware('auth');
 Route::resource('processes', 'ProcessController')->middleware('auth');
 Route::resource('projects', 'ProjectController')->middleware('auth');
-
+Route::post('projects/annexes', 'ProjectController@showAnnexed')->middleware('auth')->name('project.annexed');
+Route::resource('wordflows', 'WordflowController')->middleware('auth');
+Route::post('wordflows/steps', 'WordflowController@step')->middleware('auth')->name('wordflow.steps');
