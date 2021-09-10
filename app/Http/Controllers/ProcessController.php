@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use DataTables;
 use App\Models\Process;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
-use App\Http\Requests\FormProcessCreateRequest;
-use App\Http\Requests\FormProcessEditRequest;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\FormProcessEditRequest;
+use App\Http\Requests\FormProcessCreateRequest;
+use App\Models\AnnexedProcess;
 
 class ProcessController extends Controller
 {
@@ -29,7 +31,7 @@ class ProcessController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $process = DB::table('processes')->select('id', 'name', 'annexed', 'active')->get();
+            $process = DB::table('processes')->select('id', 'name', 'active')->get();
             return Datatables::of($process)
                     ->addIndexColumn()
                     ->addColumn('action', function($process){
@@ -37,9 +39,6 @@ class ProcessController extends Controller
                         $btn .= '<a href="'.route('processes.edit',['process' => $process->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$process->id.'" id="edit_'.$process->id.'" class="btn btn-primary btn-xs mr-1 editProcess">
                                         <i class="ti-pencil"></i>
                                 </a>';
-                        /* $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$Process->id.'" id="det_'.$Process->id.'" class="btn btn-info btn-xs  mr-1 detailProcess">
-                                    <i class="ti-search"></i>
-                                </a>'; */
                         $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="right" title="Eliminar"  data-url="'.route('processes.destroy',['process' => $process->id]).'" class="btn btn-danger btn-xs deleteProcess">
                                         <i class="ti-trash"></i>
                                 </a>';
@@ -54,7 +53,16 @@ class ProcessController extends Controller
                         }
                         return $btn;
                     })
-                    ->rawColumns(['action','active'])
+                    ->addColumn('annexed', function($process){
+                        $btn = '';
+                        $processes = Process::findOrFail($process->id);
+
+                        foreach($processes->Annexes as $annexed){
+                            $btn .= '<span class="badge badge-inverse">'.$annexed->name.'</span> ';
+                        }
+                        return $btn;
+                    })
+                    ->rawColumns(['action','active','annexed'])
                     ->make(true);
         }
         return view('panel.processes.index', ['title' => 'Procesos', 'processes' => Process::all()]);
@@ -80,10 +88,13 @@ class ProcessController extends Controller
     {
         $process                   = new Process();
         $process->name             = $request->name;
-        $process->annexed          = $request->annexed;
+        //$process->annexed          = count($request->annexed);
         $process->active           = $request->active;
         $saved = $process->save();
         if($saved)
+        foreach($request->annexed as $annexed){
+            $process->Annexes()->create(['name' => $annexed, 'process_id' => $process->id]);
+        }
             return response()->json(['success' => true, 'message' => 'Proceso registrado exitosamente.'], 200);
     }
 
@@ -95,7 +106,12 @@ class ProcessController extends Controller
      */
     public function show($id)
     {
-        //
+
+        if(\Request::wantsJson()){
+            $process = Process::findOrFail($id)->Annexes;
+            return response()->json(['success' => true, 'message' => 'Anexos del proceso cargados correctamente.', 'annexes' => $process], 200);
+        }
+        abort(404);
     }
 
     /**
@@ -120,11 +136,14 @@ class ProcessController extends Controller
     {
         $process                   = Process::find($Process->id);
         $process->name             = $request->name;
-        $process->annexed          = $request->annexed;
+        //$process->annexed          = count($request->annexed);
         $process->active           = $request->active==1 ? 1 : 0;
         $saved = $process->save();
         if($saved)
-            return response()->json(['success' => true, 'message' => 'Proceso actualizado exitosamente.'], 200);
+        foreach($request->annexed as $annexed){
+            $process->Annexes()->updateOrCreate(['name' => $annexed, 'process_id' => $process->id]);
+        }
+        return response()->json(['success' => true, 'message' => 'Proceso actualizado exitosamente.'], 200);
     }
 
     /**
@@ -142,6 +161,24 @@ class ProcessController extends Controller
                 return response()->json(['success' => true, 'message' => 'Proceso eliminado exitosamente.'], 200);
             } else {
                 return response()->json(['error' => true, 'message' => 'El Proceso no se elimino correctamente. Intente mas tarde.'], 403);
+            }
+        }
+        abort(404);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function delete(Request $request)
+    {
+        if(\Request::wantsJson()){
+            $annexed = AnnexedProcess::findOrFail($request->id);
+            $delete = $annexed->delete();
+            if($delete){
+                return response()->json(['success' => true, 'message' => 'Anexo del Proceso eliminado exitosamente.'], 200);
             }
         }
         abort(404);

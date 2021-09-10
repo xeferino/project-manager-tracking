@@ -18,6 +18,10 @@ class Process extends Model
         'name',
         'annexed',
         'active',
-        'department_id'
     ];
+
+    public function Annexes()
+    {
+        return $this->hasMany('App\Models\AnnexedProcess');
+    }
 }

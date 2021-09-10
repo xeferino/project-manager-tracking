@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => $title ?? 'Usuarios'])
+@extends('layouts.app', ['title' => $title ?? 'Flujos - Editar'])
 
 @section('page-header')
     <div class="page-wrapper">
@@ -7,10 +7,10 @@
             <div class="row align-items-end">
                 <div class="col-lg-8">
                     <div class="page-header-title">
-                        <i class="ti-pencil bg-c-blue"></i>
+                        <i class="ti-plus bg-c-blue"></i>
                         <div class="d-inline">
-                            <h4>Editar usuario</h4>
-                            <span>Actualice la informacion del usuario en el formulario de Edicion.</span>
+                            <h4>Crear flujo</h4>
+                            <span>Agregue la informacion solicita en el formulario de Edicion.</span>
                         </div>
                     </div>
                 </div>
@@ -22,9 +22,9 @@
                                 <i class="icofont icofont-home"></i>
                             </a>
                         </li>
-                        <li class="breadcrumb-item"><a href="{{ route('users.index') }}">Usuarios</a>
+                        <li class="breadcrumb-item"><a href="{{ route('wordflows.index') }}">Flujos</a>
                         </li>
-                        <li class="breadcrumb-item"><a href="{{ route('users.edit', ['user' => $user->id]) }}">Editar</a>
+                        <li class="breadcrumb-item"><a href="{{ route('wordflows.edit', ['wordflow' => $wordflow->id]) }}">Editar</a>
                         </li>
                     </ul>
                 </div>
@@ -48,64 +48,62 @@
                 </div>
             </div>
             <div class="card-block">
-                <h4 class="sub-title">Informacion requerida</h4>
-                <form method="POST" action="{{ route('users.update', ['user' => $user->id]) }}" name="form-user-edit" id="form-user-edit">
+                <form method="POST" action="" name="form-wordflow-create-steps" id="form-wordflow-create-steps">
                     @csrf
-                    @method('PUT')
+                    <h4 class="sub-title">Pasos del flujo
+                        <div class="label-main">
+                            <label class="label label-inverse" style="cursor: pointer !important;">Pasos del {{ $wordflow->name }}</label>
+                        </div>
+                    </h4>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Departamento</label>
+                        <div class="col-sm-8">
+                            <select name="departments" id="departments" class="form-control">
+                                <option value="0">.::Seleccione::.</option>
+                                @foreach ( $departments as $department )
+                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                @endforeach
+                            </select>
+                            <div class="col-form-label has-danger-departments"></div>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-primary float-right" id="btn-step"><i class="ti-plus"></i></button>
+                        </div>
+                        <div class="col-sm-12">
+                            <br>
+                            <div class="add-input-content"></div>
+                        </div>
+                    </div>
+                    <div class="alert alert-danger  has-danger-step" role="alert" style="dispaly:none;"></div>
+                </form>
+
+                <h4 class="sub-title">Informacion requerida</h4>
+                <form method="POST" action="{{ route('wordflows.store') }}" name="form-wordflow-create" id="form-wordflow-create">
+                    <input type="hidden" name="steps" id="steps">
+                    @csrf
                     <div class="form-group row">
                         <div class="col-sm-6">
-                            <label class="col-form-label">Nombres</label>
-                            <input type="text" name="name" id="name" value="{{ $user->name }}" class="form-control">
+                            <label class="col-form-label">Nombre</label>
+                            <input type="text" name="name" id="name" class="form-control">
                             <div class="col-form-label has-danger-name"></div>
                         </div>
                         <div class="col-sm-6">
-                            <label class="col-form-label">Apellidos</label>
-                            <input type="text" name="surname" id="surname" value="{{ $user->surname }}" class="form-control">
-                            <div class="col-form-label has-danger-surname"></div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Email</label>
-                            <input type="text" name="email" id="email" value="{{ $user->email }}" class="form-control">
-                            <div class="col-form-label has-danger-email"></div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Departamento</label>
-                            <select name="department" id="department" class="form-control">
-                                @foreach ($departments as $department)
-                                    <option value="{{ $department->id }}" @if ($user->department_id === $department->id) selected @endif>{{ $department->name }}</option>
+                            <label class="col-form-label">Proceso</label>
+                            <select name="process" id="process" class="form-control">
+                                <option value="">.::Seleccione::.</option>
+                                @foreach ( $processes as $process )
+                                    <option value="{{ $process->id }}">{{ $process->name }}</option>
                                 @endforeach
                             </select>
-                            <div class="col-form-label has-danger-department"></div>
+                            <div class="col-form-label has-danger-process"></div>
                         </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Role</label>
-                            <select name="role" id="role" class="form-control">
-                                <option value="root"       @if ($user->role === 'root') selected @endif>Super Admin</option>
-                                <option value="administer" @if ($user->role === 'administer') selected @endif>Administrador</option>
-                                <option value="department" @if ($user->role === 'department') selected @endif>Departamento</option>
-                            </select>
-                            <div class="col-form-label has-danger-role"></div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Estatus</label>
-                            <select name="active" id="active" class="form-control">
-                                <option value="1" @if ($user->active === 1) selected @endif>Activo</option>
-                                <option value="0" @if ($user->active === 0) selected @endif>Inactivo</option>
-                            </select>
-                            <div class="col-form-label has-danger-active"></div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Contrase&ntilde;a</label>
-                            <input type="password" name="password" id="password" class="form-control">
-                            <div class="col-form-label has-danger-password"></div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Confirmar Contrase&ntilde;a</label>
-                            <input type="password" name="cpassword" id="cpassword" class="form-control">
-                            <div class="col-form-label has-danger-cpassword"></div>
+                        <div class="col-sm-12">
+                            <label class="col-form-label">Descripcion</label>
+                            <textarea name="description" id="description" cols="10" rows="5" class="form-control"></textarea>
+                            <div class="col-form-label has-danger-description"></div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary float-right btn-user">Actualizar</button>
+                    <button type="submit" class="btn btn-primary float-right btn-wordflow">Registrar</button>
                 </form>
             </div>
         </div>
@@ -115,15 +113,49 @@
 @section('script-content')
 <script>
     $(function () {
-        $("#form-user-edit").submit(function( event ) {
+
+        const pasos = [];
+
+        $("#form-wordflow-create-steps").submit(function( event ) {
             event.preventDefault();
-            $('.btn-user').prop("disabled", true).text('Enviando...');
-            axios.put($("#form-user-edit").attr("action"), $(this).serialize(), {
+            department = $("#departments option:selected").text();
+            depart = $("#departments").val();
+            step = $('#departments').val();
+            if(depart == 0){
+                $('.has-danger-departments').text('seleccione un departamento para crear el paso').show().css("color", "red");
+            }else{
+                var valid = 0;
+                $.each(pasos, function(key, value) {
+                    if(value.department == department){
+                        valid = 1;
+                    }
+                });
+                if(valid){
+                    $('.has-danger-departments').text('el departamento seleccionado, ya esta igresado en los pasos para la creacion del flujograma para este proceso').show().css("color", "red");
+                }else{
+                    $('.has-danger-departments').text('').hide();
+                    pasos.push({
+                        'step' : step,
+                        'department' : department
+                    });
+                    console.log(pasos);
+                    //writeSteps(pasos);
+                    $('#steps').val(JSON.stringify(pasos));
+                }
+            }
+        });
+
+        $('.has-danger-step').hide();
+        $('.has-danger-departments').hide();
+        $("#form-wordflow-create").submit(function( event ) {
+            event.preventDefault();
+            $('.btn-wordflow').prop("disabled", true).text('Enviando...');
+            axios.post('{{ route('wordflows.store') }}', $(this).serialize(), {
             }).then(response => {
                 if(response.data.success){
                     notify(response.data.message, 'success', '3000', 'top', 'right');
-                    $('#form-user-edit').trigger("reset");
-                    $('.btn-user').prop("disabled", false).text('Actualizar');
+                    $('#form-wordflow-create').trigger("reset");
+                    $('.btn-wordflow').prop("disabled", false).text('Registrar');
                     $('div.col-form-label').text('');
                     setTimeout(function () {location.reload(); }, 3000);
                 }
@@ -131,48 +163,27 @@
                 if (error.response) {
                         if(error.response.status === 422){
                             var err = error.response.data.errors;
-                            /* $.each(err, function( key, value) {
-                                notify(value, 'danger', '5000', 'top', 'right');
-                            }); */
                             if (error.response.data.errors.name) {
                                 $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "red");
                             }else{
                                 $('.has-danger-name').text('');
                             }
-                            if (error.response.data.errors.surname) {
-                                $('.has-danger-surname').text('' + error.response.data.errors.surname + '').css("color", "red");
+
+                            if (error.response.data.errors.process) {
+                                $('.has-danger-process').text('' + error.response.data.errors.process + '').css("color", "red");
                             }else{
-                                $('.has-danger-surname').text('');
+                                $('.has-danger-process').text('');
                             }
-                            if (error.response.data.errors.email) {
-                                $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "red");
+
+                            if (error.response.data.errors.description) {
+                                $('.has-danger-description').text('' + error.response.data.errors.description + '').css("color", "red");
                             }else{
-                                $('.has-danger-email').text('');
+                                $('.has-danger-description').text('');
                             }
-                            if (error.response.data.errors.role) {
-                                $('.has-danger-role').text('' + error.response.data.errors.role + '').css("color", "red");
+                            if (error.response.data.errors.steps) {
+                                $('.has-danger-step').text('' + error.response.data.errors.steps + '').show();
                             }else{
-                                $('.has-danger-role').text('');
-                            }
-                            if (error.response.data.errors.active) {
-                                $('.has-danger-active').text('' + error.response.data.errors.active + '').css("color", "red");
-                            }else{
-                                $('.has-danger-active').text('');
-                            }
-                            if (error.response.data.errors.department) {
-                                $('.has-danger-department').text('' + error.response.data.errors.department + '').css("color", "red");
-                            }else{
-                                $('.has-danger-department').text('');
-                            }
-                            if (error.response.data.errors.password) {
-                                $('.has-danger-password').text('' + error.response.data.errors.password + '').css("color", "red");
-                            }else{
-                                $('.has-danger-password').text('');
-                            }
-                            if (error.response.data.errors.cpassword) {
-                                $('.has-danger-cpassword').text('' + error.response.data.errors.cpassword + '').css("color", "red");
-                            }else{
-                                $('.has-danger-cpassword').text('');
+                                $('.has-danger-step').text('').hide();
                             }
                         }else{
                             notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
@@ -180,9 +191,47 @@
                     }else{
                         notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
                     }
-                    $('.btn-user').prop("disabled", false).text('Actualizar');
+                    $('.btn-wordflow').prop("disabled", false).text('Registrar');
             });
         });
-    });
+
+        $('body').on('click', '.delete', function(e){
+            var index = $(this).data('id');
+            pasos.splice(index, 1);
+            console.log(pasos);
+            writeSteps(pasos);
+        });
+});
+    function writeSteps(pasos){
+        $('.add-input-content').html(function(){
+            var items = '';
+            items += `<div class="card-block table-border-style">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-user">
+                                <thead>
+                                    <th>Item</th>
+                                    <th>Departamento</th>
+                                    <th>Aciones</th>
+                                </thead>
+                                <tbody>`;
+                                    var i = 1;
+                                    $.each(pasos, function(key, value) {
+                            items +=     `<tr>
+                                                <td>Paso #${i++}</td>
+                                                <td>${value.department}</td>
+                                                <td align="center">
+                                                    <button type="button" class="btn btn-danger delete" data-id="${key}">
+                                                        <i class="ti-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>`;
+                                        });
+                        items +=`</tbody>
+                            </table>
+                        </div>
+                    </div>`;
+            return items;
+        });
+    }
 </script>
 @endsection

@@ -16,7 +16,7 @@ class CreateProcessesTable extends Migration
         Schema::create('processes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('annexed');
+            $table->integer('annexed')->nullable($value=true);
             $table->boolean('active')->default(1);
             $table->timestamps();
         });

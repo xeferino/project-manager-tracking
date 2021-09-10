@@ -57,11 +57,11 @@
                             <input type="text" name="name" id="name" class="form-control">
                             <div class="col-form-label has-danger-name"></div>
                         </div>
-                        <div class="col-sm-6">
+                        {{-- <div class="col-sm-6">
                             <label class="col-form-label">Anexo</label>
                             <input type="text" name="annexed" id="annexed" class="form-control">
                             <div class="col-form-label has-danger-annexed"></div>
-                        </div>
+                        </div> --}}
                         <div class="col-sm-6">
                             <label class="col-form-label">Estatus</label>
                             <select name="active" id="active" class="form-control">
@@ -72,6 +72,13 @@
                             <div class="col-form-label has-danger-active"></div>
                         </div>
                     </div>
+                    <h4 class="sub-title">Anexos del proceso
+                        <div class="label-main">
+                            <label class="label label-inverse add-annexed" style="cursor: pointer !important;">Nuevo</label>
+                        </div>
+                    </h4>
+                    <div class="add-content-annexed"></div>
+                    <div class="alert alert-danger  has-danger-annexed" role="alert"></div>
                     <button type="submit" class="btn btn-primary float-right btn-process">Registrar</button>
                 </form>
             </div>
@@ -82,6 +89,36 @@
 @section('script-content')
 <script>
     $(function () {
+        $('.has-danger-annexed').hide();
+        //click new annexed process
+        $('body').on('click', '.add-annexed', function(e) {
+            var annexes = document.createElement('div');
+            annexes.setAttribute('class', 'div-content');
+            var class_div = $('.div-content').length+1;
+            content = '';
+            var content = '';
+            content += `<div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Anexo</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="annexed[]" id="annexed" class="form-control">
+                            </div>
+                            <div class="col-sm-2">
+                                <a href="#" class="btn btn-danger btn-xs mr-1 delete">
+                                    <i class="ti-trash"></i>
+                                </a>
+                            </div>
+                        </div>`;
+            $(annexes).append(content);
+            $('.add-content-annexed').append(annexes);
+            $('#annexes').val(class_div);
+        });
+
+        $('body').on('click', '.add-content-annexed  .delete', function(e) {
+            e.preventDefault();
+            $(this).parents('.div-content').remove();
+            $('#annexes').val($(this).data('annexed')-1);
+        });
+
         $("#form-process-create").submit(function( event ) {
             event.preventDefault();
             $('.btn-process').prop("disabled", true).text('Enviando...');
@@ -92,14 +129,12 @@
                     $('#form-process-create').trigger("reset");
                     $('.btn-process').prop("disabled", false).text('Registrar');
                     $('div.col-form-label').text('');
+                    setTimeout(function () {location.reload(); }, 3000);
                 }
             }).catch(error => {
                 if (error.response) {
                         if(error.response.status === 422){
                             var err = error.response.data.errors;
-                            /* $.each(err, function( key, value) {
-                                notify(value, 'danger', '5000', 'top', 'right');
-                            }); */
                             if (error.response.data.errors.name) {
                                 $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "red");
                             }else{
@@ -107,9 +142,9 @@
                             }
 
                             if (error.response.data.errors.annexed) {
-                                $('.has-danger-annexed').text('' + error.response.data.errors.annexed + '').css("color", "red");
+                                $('.has-danger-annexed').text('' + error.response.data.errors.annexed + '').show();
                             }else{
-                                $('.has-danger-annexed').text('');
+                                $('.has-danger-annexed').text('').hide();
                             }
 
                             if (error.response.data.errors.active) {

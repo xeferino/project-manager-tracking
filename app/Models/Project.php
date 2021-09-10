@@ -14,4 +14,19 @@ class Project extends Model
         'process_id',
         'status'
     ];
+
+    public function Binnacles()
+    {
+        return $this->hasMany('App\Models\Binnacle');
+    }
+
+    public function Process()
+    {
+        return $this->belongsTo('App\Models\Process');
+    }
+
+    public function Annexes()
+    {
+        return $this->hasMany('App\Models\AnnexedProject');
+    }
 }

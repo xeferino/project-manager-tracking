@@ -17,7 +17,7 @@ class CreateProjectsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable($value=true);
-            $table->enum('status',['completed', 'pending', 'created', 'returned', 'dispatched']);
+            $table->enum('status',['COMPLETADO', 'PENDIENTE', 'CREADO', 'RECHAZADO', 'ENVIADO', 'ARCHIVADO', 'APROBADO', 'DEVUELTO', 'ANULADO']);
             $table->timestamps();
         });
     }

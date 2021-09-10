@@ -135,8 +135,8 @@
                 }else{
                     $('.has-danger-departments').text('').hide();
                     pasos.push({
-                        'department' : department,
-                        'step' : step
+                        'id' : step,
+                        'department' : department
                     });
                     console.log(pasos);
                     writeSteps(pasos);

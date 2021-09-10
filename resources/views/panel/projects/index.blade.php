@@ -44,11 +44,11 @@
         </div>
         <div class="card-block table-border-style">
             <div class="table-responsive">
-                <table class="table table-hover table-user">
+                <table class="table table-hover table-project">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Nombres</th>
+                            <th>Nombre</th>
                             <th>Usuario</th>
                             <th>Departamento</th>
                             <th>Fecha Modificacion</th>
@@ -69,7 +69,7 @@
 <script>
     $(function () {
         /*DataTables*/
-        var table = $('.table-user').DataTable({
+        var table = $('.table-project').DataTable({
             processing: true,
             serverSide: true,
             "language": {
@@ -98,7 +98,7 @@
             ajax: "{{ route('projects.index') }}",
             columns: [
                 {data: 'id', name: 'id'},
-                {data: 'description', name: 'description'},
+                {data: 'name', name: 'name'},
                 {data: 'user', name: 'user'},
                 {data: 'department', name: 'department'},
                 {data: 'updated_at', name: 'updated_at'},
@@ -108,11 +108,12 @@
         });
         /*DataTables*/
 
-         /*alert-user-delete*/
-        /* $('body').on('click', '.deleteUser', function () {
+         /*alert-project-delete*/
+        $('body').on('click', '.deleteProject', function () {
             var url = $(this).data("url");
+            var id = $(this).data("id");
             swal({
-                    title: '¿Desea eliminar el usuario?',
+                    title: '¿Desea eliminar el proyecto '+id+'?',
                     text: "Recuerde que esta acción no tiene revera.",
                     type: 'error',
                     icon : "error",
@@ -151,8 +152,8 @@
                         swal.close();
                     }
                 });
-        }); */
-        /*alert-user-delete*/
+        });
+        /*alert-project-delete*/
     });
 </script>
 @endsection

@@ -19,6 +19,12 @@ class UserSeeder extends Seeder
         DB::table('departments')->insert([
             'name' => 'Logistica'
         ]);
+        DB::table('departments')->insert([
+            'name' => 'Financiera'
+        ]);
+        DB::table('departments')->insert([
+            'name' => 'Administracion'
+        ]);
 
         DB::table('users')->insert([
             'name' => 'Super',

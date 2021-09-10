@@ -106,11 +106,11 @@
         });
         /*DataTables*/
 
-         /*alert-user-delete*/
-        /* $('body').on('click', '.deleteUser', function () {
+          /*alert-Wordflow-delete*/
+          $('body').on('click', '.deleteWordflow', function () {
             var url = $(this).data("url");
             swal({
-                    title: '¿Desea eliminar el usuario?',
+                    title: '¿Desea eliminar el Flujograma?',
                     text: "Recuerde que esta acción no tiene revera.",
                     type: 'error',
                     icon : "error",
@@ -149,8 +149,8 @@
                         swal.close();
                     }
                 });
-        }); */
-        /*alert-user-delete*/
+        });
+        /*alert-Wordflow-delete*/
     });
 </script>
 @endsection

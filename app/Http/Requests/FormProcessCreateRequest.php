@@ -25,7 +25,7 @@ class FormProcessCreateRequest extends FormRequest
     {
         return [
             'name'         => 'required|min:3|unique:processes,name',
-            'annexed'      => 'required|integer',
+            'annexed'      => 'required',
             'active'       => 'required',
         ];
     }
@@ -34,8 +34,7 @@ class FormProcessCreateRequest extends FormRequest
     {
         return [
             'active.required'       =>  'El estatus es requerido.',
-            'annexed.required'      =>  'El anexo es requerido.',
-            'annexed.integer'       =>  'El anexo debe ser numerico.',
+            'annexed.required'      =>  'El proceso debe contener al menos un anexo',
             'name.required'         =>  'El nombre es requerido.',
             'name.min'              =>  'El nombre debe contener un minimo de 3 caracteres.',
             'name.unique'           =>  'El nombre ingresado ya existe!',

@@ -25,7 +25,7 @@ class FormWordflowCreateRequest extends FormRequest
     {
         return [
             'name'          => 'required|min:3|unique:wordflows,name',
-            'description'   => 'nullable|min:10',
+            'description'   => 'required|min:10',
             'process'       => 'required|unique:wordflows,process_id',
             'steps'         => 'required',
         ];
@@ -35,6 +35,7 @@ class FormWordflowCreateRequest extends FormRequest
     {
         return [
             'description.min'       =>  'La descripcion debe tener un minimo de 10 caracteres.',
+            'description.required'  =>  'La descripcion es requerida.',
             'process.required'      =>  'El proceso es requerido.',
             'process.unique'        =>  'El proceso debe ser unico por flujograma.',
             'name.required'         =>  'El nombre es requerido.',

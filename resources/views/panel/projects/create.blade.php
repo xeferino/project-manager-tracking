@@ -53,7 +53,9 @@
                     @csrf
                     <input type="hidden" name="action" id="action">
                     <input type="hidden" name="annexes" id="annexes">
+                    <input type="hidden" name="annexed_count" id="annexed_count">
                     <input type="hidden" name="department" id="department">
+                    <input type="hidden" name="btn-send" id="btn-send">
                     <div class="form-group row">
                         <div class="col-sm-6">
                             <label class="col-form-label">Nombre</label>
@@ -104,34 +106,36 @@
                 $('.has-danger-process').text('El proceso es requerido').css("color", "red");
             }else{
                 $('.has-danger-process').text('');
-                axios.post('{{ route('project.annexed') }}', {
+                axios.post('{{ route('projects.annexed') }}', {
                     id: $('#process').val(),
                 }).then(response => {
                     if(response.data.success){
                         notify(response.data.message, 'success', '3000', 'top', 'right');
                         $('.btn-project-send').prop("disabled", false).text(`Enviar al siguiente departamento ${response.data.wordflow.name}`);
                         $('#department').val(response.data.wordflow.id);
+                        $('#btn-send').val(response.data.wordflow.name);
+                        $('#btn-send').val(response.data.wordflow.name);
+                        $('#annexed_count').val(response.data.annexes.length);
+
                         $('.add-input-content').html(function(){
                             var items = '';
-                            items += `<h4 class="sub-title">Axenos del proceso ${response.data.annexes.name}
+                            items += `<h4 class="sub-title">Axenos del proceso ${response.data.process.name}
                                             <div class="label-main">
                                                 <label class="label label-inverse add-annexed" style="cursor: pointer !important;">Nuevo Anexo</label>
                                             </div>
                                         </h4>`;
-                            /* for(i=1; i<=response.data.annexes.annexed; i++){
-                                items += `<div class="form-group row">
-                                                <label class="col-sm-2 col-form-label">Anexo #${i}</label>
-                                                <div class="col-sm-8">
-                                                    <input type="file" class="form-control">
+
+                            $.each(response.data.annexes, function (index, value) {
+                                items += `<div class="div-content">
+                                                <div class="form-group row">
+                                                    <label class="col-sm-2 col-form-label">${value.name}</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="hidden" name="annexed_name[]" id="annexed_name" value="${value.name}">
+                                                        <input type="file" name="annexed[]" id="annexed" class="form-control-file">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                           <div class="col-sm-2">
-                                                <a href="#" class="btn btn-danger btn-xs mr-1 delete">
-                                                    <i class="ti-trash"></i>
-                                                </a>
                                             </div>`;
-                            };
-                            items += `<div class="add-input-content-new"></div>`; */
+                            });
                             return items;
                         });
                     }
@@ -156,9 +160,12 @@
             content = '';
             var content = '';
             content += `<div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Anexo # ${class_div}</label>
-                            <div class="col-sm-8">
-                                <input type="file"name="annexed[]" id="annexed" class="form-control-file">
+                            <label class="col-sm-2 col-form-label">Anexo</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="annexed_name[]" id="annexed_name" class="form-control">
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="file" name="annexed[]" id="annexed" class="form-control-file">
                             </div>
                             <div class="col-sm-2">
                                 <a href="#" class="btn btn-danger btn-xs mr-1 delete" data-annexed="${class_div}">
@@ -181,6 +188,7 @@
         $('.has-danger-annexed').hide();
         $('.has-danger-departments').hide();
         $('body').on('click', '.btn-project', function(e) {
+            $('.btn-project').prop("disabled", true).text('Enviando...');
             //e.preventDefault();
             //alert('aqui');
             const formData = document.getElementById("form-project-create");
@@ -200,7 +208,7 @@
                     if(response.data.success){
                         notify(response.data.message, 'success', '3000', 'top', 'right');
                         $('#form-project-create').trigger("reset");
-                        $('.btn-project').prop("disabled", false).text('Registrar');
+                        $('.btn-project').prop("disabled", false).text('Crear Proyecto');
                         $('div.col-form-label').text('');
                         setTimeout(function () {location.reload(); }, 3000);
                     }
@@ -236,7 +244,7 @@
                     }else{
                         notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
                     }
-                    $('.btn-project').prop("disabled", false).text('Registrar');
+                    $('.btn-project').prop("disabled", false).text('Crear Proyecto');
                 });
             //});
         });
@@ -247,7 +255,8 @@
             const formData = document.getElementById("form-project-create");
             $('#action').val('send');
             $('#department').val();
-
+            $('.btn-project-send').prop("disabled", true).text('Enviando...');
+            var btn_send = $('#btn-send').val();
             //formData.addEventListener("submit", function (event) {
                 event.preventDefault();
                 let data = new FormData(formData);
@@ -263,7 +272,7 @@
                     if(response.data.success){
                         notify(response.data.message, 'success', '3000', 'top', 'right');
                         $('#form-project-create').trigger("reset");
-                        $('.btn-project').prop("disabled", false).text('Registrar');
+                        $('.btn-project-send').prop("disabled", false).text(`Enviar al siguiente departamento ${btn_send}`);
                         $('div.col-form-label').text('');
                         setTimeout(function () {location.reload(); }, 3000);
                     }
@@ -299,7 +308,7 @@
                     }else{
                         notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
                     }
-                    $('.btn-project').prop("disabled", false).text('Registrar');
+                    $('.btn-project-send').prop("disabled", false).text(`Enviar al siguiente departamento ${btn_send}`);
                 });
             //});
         });

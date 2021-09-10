@@ -35,12 +35,13 @@ class WordflowController extends Controller
             return Datatables::of($wordflow)
                     ->addIndexColumn()
                     ->addColumn('action', function($wordflow){
-                           $btn = '';
+                        $btn = '';
                         /* $btn .= '<a href="'.route('wordflows.edit',['wordflow' => $wordflow->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$wordflow->id.'" id="edit_'.$wordflow->id.'" class="btn btn-primary btn-xs mr-1 editWordflow">
                                         <i class="ti-pencil"></i>
                                 </a>'; */
-                        $btn .= '<a href="" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$wordflow->id.'" id="edit_'.$wordflow->id.'" class="btn btn-primary btn-xs mr-1 editWordflow">
-                                        <i class="ti-pencil"></i>
+
+                        $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="right" title="Eliminar"  data-url="'.route('wordflows.destroy',['wordflow' => $wordflow->id]).'" class="btn btn-danger btn-xs deleteWordflow">
+                                        <i class="ti-trash"></i>
                                 </a>';
                         return $btn;
                     })
@@ -55,7 +56,7 @@ class WordflowController extends Controller
                         $btn = '';
                         $i=1;
                         foreach (json_decode($wordflow->steps, true) as $data) {
-                            $btn .= 'Paso #'.$i++.': ' .Department::find($data['step'])->name.'<br>';
+                            $btn .= 'Paso #'.$i++.': ' .Department::find($data['id'])->name.'<br>';
                         }
                         return $btn;
                     })
@@ -128,7 +129,7 @@ class WordflowController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('panel.wordflows.edit', ['title' => 'Flujos - Editar', 'wordflow' => Wordflow::find($id), 'processes' => Process::where('active', 1)->get(), 'departments' => Department::where('active', 1)->get()]);
     }
 
     /**
@@ -151,6 +152,15 @@ class WordflowController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(\Request::wantsJson()){
+            $wordflow = Wordflow::findOrFail($id);
+            $delete = $wordflow->delete();
+            if ($delete) {
+                return response()->json(['success' => true, 'message' => 'Flujograma eliminado exitosamente.'], 200);
+            } else {
+                return response()->json(['error' => true, 'message' => 'El Flujograma no se elimino correctamente. Intente mas tarde.'], 403);
+            }
+        }
+        abort(404);
     }
 }

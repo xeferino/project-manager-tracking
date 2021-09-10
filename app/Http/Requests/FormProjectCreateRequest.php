@@ -47,7 +47,7 @@ class FormProjectCreateRequest extends FormRequest
             'name.required'         =>  'El nombre es requerido.',
             'name.min'              =>  'El nombre debe contener un minimo de 3 caracteres.',
             'name.unique'           =>  'El nombre ingresado ya existe!',
-            'annexed.required'      =>  'Debe agregar al menos un anexo, para proceder al envio del proyecto',
+            'annexed.required'      =>  'Debe agregar los anexos, para proceder al envio del proyecto',
         ];
     }
 }

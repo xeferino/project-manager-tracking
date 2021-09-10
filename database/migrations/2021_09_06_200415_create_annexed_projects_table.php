@@ -15,13 +15,14 @@ class CreateAnnexedProjectsTable extends Migration
     {
         Schema::create('annexed_projects', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('file_name_original');
             $table->string('file_name');
             $table->string('file_path');
             $table->string('file_path_delete');
             $table->string('file_size');
             $table->string('file_type');
             $table->longText('observation')->nullable();
+            $table->string('annexed_name');
             $table->foreignId('project_id');
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();

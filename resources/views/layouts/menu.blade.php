@@ -31,10 +31,18 @@
                 </a>
             </li>
 
-            <li class="{{(\Request::segment(1)=='projects')?'active':''}}">
+            {{-- <li class="{{(\Request::segment(1)=='projects')?'active':''}}">
                 <a href="{{ route('projects.index') }}">
                     <span class="pcoded-micon"><i class="ti-layers"></i><b>PY</b></span>
                     <span class="pcoded-mtext" data-i18n="nav.form-components.main">Proyectos</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li> --}}
+
+            <li class="{{(\Request::segment(1)=='projects')?'active':''}}">
+                <a href="{{ route('projects.index') }}">
+                    <span class="pcoded-micon"><i class="ti-layers"></i><b>PY</b></span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Mis Proyectos</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>
